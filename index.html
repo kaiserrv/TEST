@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Slide</title>
   <style>
     * { box-sizing: border-box; }
@@ -31,23 +31,18 @@
   </style>
   <script>
     function scaleToFit() {
-      var page = document.querySelector('.export-page');
-      var wrapper = document.getElementById('page-wrapper');
+      const page = document.querySelector('.export-page');
+      const wrapper = document.getElementById('page-wrapper');
+
       if (!page || !wrapper) return;
-      var pageWidth = 1440;
-      var screenWidth = window.innerWidth;
-      if (screenWidth < pageWidth) {
-        var scale = screenWidth / pageWidth;
-        page.style.transform = 'scale(' + scale + ')';
-        page.style.marginTop = '0';
-        page.style.marginBottom = '0';
-        // Adjust wrapper height so page doesn't overlap content below
-        var pageHeight = page.getBoundingClientRect().height / scale;
-        wrapper.style.height = (pageHeight * scale) + 'px';
-      } else {
-        page.style.transform = 'none';
-        wrapper.style.height = 'auto';
-      }
+
+      const pageWidth = 1440;
+      const scale = Math.min(window.innerWidth / pageWidth, 1);
+
+      page.style.transform = `scale(${scale})`;
+      page.style.transformOrigin = 'top left';
+
+      wrapper.style.height = (page.offsetHeight * scale) + 'px';
     }
     window.addEventListener('load', scaleToFit);
     window.addEventListener('resize', scaleToFit);
