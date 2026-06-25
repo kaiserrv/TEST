@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wave1</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: white;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* =========================
+   SCROLL
+========================= */
+
+.track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    display: flex;
+    width: max-content;
+    animation: scrollLeft 27.5s linear infinite;
+}
+
+@keyframes scrollLeft {
+    from {
+        transform: translateY(-50%) translateX(0);
+    }
+    to {
+        transform: translateY(-50%) translateX(-50%);
+    }
+}
+
+.section {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.image {
+    width: 220px;
+    height: 220px;
+    object-fit: contain;
+}
+
+/* =========================
+   CONNECTOR
+========================= */
+
+.connector {
+    position: relative;
+    width: 200vw;
+    max-width: 2800px;
+    height: 260px;
+}
+
+/* =========================
+   LINES (15% SMALLER)
+========================= */
+
+.line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 19px; /* reduced from 22px */
+    background: black;
+    z-index: 1;
+}
+
+.line.top { top: 40px; }
+.line.middle { top: 115px; }
+.line.bottom { top: 190px; }
+
+/* =========================
+   PHRASES
+========================= */
+
+.phrase {
+    position: absolute;
+
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 900;
+
+    color: black;
+    white-space: nowrap;
+
+    transform: translate(-50%, -50%);
+    z-index: 20;
+}
+
+/* =========================
+   TIGHT LINE-BREAK MASK
+   (smaller, closer to text size)
+========================= */
+
+.phrase::before {
+    content: "";
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    /* much tighter fit */
+    width: 108%;
+    height: 115%;
+
+    background: white;
+
+    z-index: -1;
+}
+</style>
+</head>
+
+<body>
+    
+<!-- Top image -->
+<a href="../../releases/wave1/rohan.html" target="_blank">
+    <img src="../../images/wave1/rohan/galio.png"
+         style="position:fixed;top:40px;left:400px;width:250px;height:250px;object-fit:contain;">
+</a>
+<!-- Bottom image -->
+<a href="../../releases/wave1/thomas.html" target="_blank">
+    <img src="../../images/wave1/thomas/flag.png"
+         style="position:fixed;bottom:30px;left:270px;width:500px;height:300px;object-fit:contain;">
+</a>
+    
+<p style="position:fixed;bottom:10px;left:50%;transform:translateX(-50%);font-family:Arial;font-size:10px;color:rgb(55,65,81);margin:0;white-space:nowrap;">® 2026 SLIDE</p>
+<div class="track" id="track"></div>
+
+<script>
+
+const IMAGE_PATH = "../../images/wave1/christian/slidingbear.png";
+
+const PHRASES = [
+    "djwillyg",
+    "SLIDE RADIO 1.11 OUT NOW",
+    "SLIDE RADIO",
+    "SLIDE RADIO 1.11",
+    "SLIDE",
+    "CLICK HERE",
+    "SLIDE MUSIC",
+    "WILL",
+    "LISTEN TO SLIDE RADIO 1.11",
+    "HEAR NEW MUSIC  NOW!!!"
+];
+
+const SECTIONS_PER_LOOP = 6;
+
+/* =========================
+   HELPERS
+========================= */
+
+function randomPhrase() {
+    return PHRASES[Math.floor(Math.random() * PHRASES.length)];
+}
+
+function randomLineY() {
+    return [40, 115, 190][Math.floor(Math.random() * 3)];
+}
+
+function randomX() {
+    return [20, 50, 80][Math.floor(Math.random() * 3)];
+}
+
+/* =========================
+   PHRASE
+========================= */
+
+function createPhrase() {
+    const text = randomPhrase();
+
+    if (text === "CLICK HERE") {
+        const a = document.createElement("a");
+        a.className = "phrase";
+        a.textContent = text;
+        a.href = "slideradio111.html";        
+        a.target = "_blank";
+        a.style.left = randomX() + "%";
+        a.style.top = randomLineY() + "px";
+        a.style.textDecoration = "none";
+        a.style.color = "black";
+        a.style.cursor = "pointer";
+        return a;
+    }
+
+    const p = document.createElement("div");
+    p.className = "phrase";
+
+    p.textContent = text;
+
+    p.style.left = randomX() + "%";
+    p.style.top = randomLineY() + "px";
+
+    return p;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+function createSection() {
+
+    const section = document.createElement("div");
+    section.className = "section";
+
+    const link = document.createElement("a");
+    link.href = "../../releases/wave1/slideradio111.html";
+    link.target = "_blank";
+    
+    const img = document.createElement("img");
+    img.src = IMAGE_PATH;
+    img.className = "image";
+    
+    link.appendChild(img);
+    section.appendChild(link);
+
+    const connector = document.createElement("div");
+    connector.className = "connector";
+
+    ["top","middle","bottom"].forEach(cls => {
+        const line = document.createElement("div");
+        line.className = "line " + cls;
+        connector.appendChild(line);
+    });
+
+    const lines = [40, 115, 190];
+
+    const used = new Set();
+
+    for (let i = 0; i < 2; i++) {
+        let y;
+        do {
+            y = lines[Math.floor(Math.random() * lines.length)];
+        } while (used.has(y));
+
+        used.add(y);
+
+        const p = createPhrase();
+        p.style.top = y + "px";
+
+        connector.appendChild(p);
+    }
+
+    if (Math.random() < 0.30) {
+        const y = lines[Math.floor(Math.random() * lines.length)];
+        const p = createPhrase();
+        p.style.top = y + "px";
+        connector.appendChild(p);
+    }
+
+    section.appendChild(connector);
+    return section;
+}
+
+/* =========================
+   LOOP
+========================= */
+
+function buildLoop() {
+    const frag = document.createDocumentFragment();
+
+    for (let i = 0; i < SECTIONS_PER_LOOP; i++) {
+        frag.appendChild(createSection());
+    }
+
+    return frag;
+}
+
+const track = document.getElementById("track");
+
+track.appendChild(buildLoop());
+track.appendChild(buildLoop());
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>print.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: #ffffff;
+      font-family: 'Georgia', serif;
+    }
+
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 60px 24px 48px;
+    }
+
+    .wordmark {
+      position: fixed;
+      top: 28px;
+      left: 36px;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      color: #b0a99a;
+      text-transform: lowercase;
+      user-select: none;
+    }
+
+    .artist-name {
+      position: fixed;
+      top: 52px;
+      left: 36px;
+      font-size: 13px;
+      letter-spacing: 0.10em;
+      color: #b0a99a;
+      user-select: none;
+      font-family: 'Georgia', serif;
+      display: flex;
+      gap: 5px;
+    }
+
+    .stage {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 1100px;
+      justify-content: center;
+    }
+
+    .frame {
+      flex: 1 1 auto;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .painting-wrap {
+      width: 100%;
+      background: #e5e5e5;
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.07),
+        0 12px 40px rgba(0,0,0,0.10),
+        0 0 0 1px rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+      padding: 5px;
+    }
+
+    .painting-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 72vh;
+      object-fit: contain;
+      transition: opacity 0.35s ease;
+    }
+
+    .painting-wrap img.fade {
+      opacity: 0;
+    }
+
+    .caption {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: #b0a99a;
+      text-transform: lowercase;
+      text-align: center;
+      height: 16px;
+      transition: opacity 0.25s ease;
+    }
+
+    .side-nav {
+      flex: 0 0 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 12px 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .nav-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .nav-thumb {
+      width: 38px;
+      height: 38px;
+      object-fit: cover;
+      filter: grayscale(40%);
+      opacity: 0.6;
+      transition: opacity 0.2s, filter 0.2s;
+      border: 1px solid #e5e5e5;
+    }
+
+    .nav-btn:hover .nav-thumb {
+      opacity: 1;
+      filter: grayscale(0%);
+    }
+
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: #b0a99a;
+      text-transform: lowercase;
+      font-family: 'Georgia', serif;
+      transition: color 0.2s;
+    }
+
+    .nav-btn:hover .nav-label {
+      color: #374151;
+    }
+
+    .pips {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #d4cfc9;
+      transition: background 0.25s;
+    }
+
+    .pip.active {
+      background: #374151;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: #c9c4be;
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 640px) {
+      .side-nav { flex: 0 0 44px; }
+      .nav-thumb { width: 28px; height: 28px; }
+      .painting-wrap { padding: 3px; }
+    }
+  </style>
+</head>
+<body>
+
+<span class="wordmark">print.</span>
+<div class="artist-name">
+  <span id="nameFirst">Rohan</span>
+  <span id="nameLast">Rai</span>
+</div>
+
+<main class="gallery">
+  <div class="stage">
+
+    <div class="side-nav">
+      <button class="nav-btn" id="btnLeft" onclick="go(-1)" aria-label="Previous">
+        <img class="nav-thumb" id="thumbLeft" src="" alt="">
+        <span class="nav-label" id="labelLeft"></span>
+      </button>
+    </div>
+
+    <div class="frame">
+      <div class="painting-wrap">
+        <img id="mainImg" src="" alt="print artwork">
+      </div>
+      <p class="caption" id="caption"></p>
+      <div class="pips">
+        <div class="pip" data-i="0"></div>
+        <div class="pip" data-i="1"></div>
+        <div class="pip" data-i="2"></div>
+      </div>
+    </div>
+
+    <div class="side-nav">
+      <button class="nav-btn" id="btnRight" onclick="go(1)" aria-label="Next">
+        <img class="nav-thumb" id="thumbRight" src="" alt="">
+        <span class="nav-label" id="labelRight"></span>
+      </button>
+    </div>
+
+  </div>
+</main>
+
+<footer>© 2026 Rohan Rai</footer>
+
+<script>
+  const pieces = [
+    { src: '../../images/wave1/rohan/piece 1/pt 1.png', label: 'pt. 1' },
+    { src: '../../images/wave1/rohan/piece 1/pt 2.png', label: 'pt. 2' },
+    { src: '../../images/wave1/rohan/piece 1/pt 3.png', label: 'pt. 3' },
+  ];
+
+  const udThumbs = [
+    { src: '../../images/wave1/rohan/piece 2/ud 1.png', label: 'ud 1' },
+    { src: '../../images/wave1/rohan/piece 2/ud 2.png', label: 'ud 2' },
+    { src: '../../images/wave1/rohan/piece 2/ud 3.png', label: 'ud 3' },
+  ];
+
+  let current = 0;
+
+  const mainImg    = document.getElementById('mainImg');
+  const caption    = document.getElementById('caption');
+  const btnLeft    = document.getElementById('btnLeft');
+  const btnRight   = document.getElementById('btnRight');
+  const thumbLeft  = document.getElementById('thumbLeft');
+  const thumbRight = document.getElementById('thumbRight');
+  const labelLeft  = document.getElementById('labelLeft');
+  const labelRight = document.getElementById('labelRight');
+  const pips       = document.querySelectorAll('.pip');
+
+  function render(idx) {
+    const piece = pieces[idx];
+
+    mainImg.classList.add('fade');
+    caption.style.opacity = '0';
+
+    setTimeout(function() {
+      mainImg.src = piece.src;
+      caption.textContent = piece.label;
+      mainImg.onload = function() {
+        mainImg.classList.remove('fade');
+        caption.style.opacity = '1';
+      };
+      if (mainImg.complete) {
+        mainImg.classList.remove('fade');
+        caption.style.opacity = '1';
+      }
+    }, 200);
+
+    pips.forEach(function(p) {
+      p.classList.toggle('active', +p.dataset.i === idx);
+    });
+
+    if (idx > 0) {
+      thumbLeft.src = udThumbs[idx - 1].src;
+      labelLeft.textContent = udThumbs[idx - 1].label;
+      btnLeft.classList.add('visible');
+    } else {
+      btnLeft.classList.remove('visible');
+    }
+
+    if (idx < pieces.length - 1) {
+      thumbRight.src = udThumbs[idx + 1].src;
+      labelRight.textContent = udThumbs[idx + 1].label;
+      btnRight.classList.add('visible');
+    } else {
+      btnRight.classList.remove('visible');
+    }
+  }
+
+  function go(dir) {
+    var next = current + dir;
+    if (next < 0 || next >= pieces.length) return;
+    current = next;
+    render(current);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft')  go(-1);
+    if (e.key === 'ArrowRight') go(1);
+  });
+
+  render(0);
+
+  // name glitch — strictly alternates between hiding first and last name
+  (function() {
+    var first = document.getElementById('nameFirst');
+    var last  = document.getElementById('nameLast');
+    var turn  = 0; // 0 = hide first, 1 = hide last
+
+    function glitch() {
+      var el = (turn === 0) ? first : last;
+      turn = 1 - turn;
+
+      el.style.visibility = 'hidden';
+
+      var hideDuration = 2500 + Math.random() * 1500;
+      setTimeout(function() {
+        el.style.visibility = 'visible';
+        var pause = 3000 + Math.random() * 4000;
+        setTimeout(glitch, pause);
+      }, hideDuration);
+    }
+
+    setTimeout(glitch, 2000);
+  })();
+</script>
+</body>
+</html>
