@@ -15,6 +15,10 @@
       font-family: Arial, sans-serif;
     }
     .export-page {
+      width:1440px;
+      min-width:1440px;
+      transform-origin: top center;
+    
       position: relative;
       width: 1440px;
       min-width: 1440px;
@@ -30,22 +34,28 @@
     }
   </style>
   <script>
-    function scaleToFit() {
-      const page = document.querySelector('.export-page');
-      const wrapper = document.getElementById('page-wrapper');
+    
+function scaleToFit() {
+  const page = document.querySelector('.export-page');
+  const wrapper = document.getElementById('page-wrapper');
+  if (!page || !wrapper) return;
 
-      if (!page || !wrapper) return;
+  const pageWidth = 1440;
+  let scale = Math.min(window.innerWidth / pageWidth, 1);
 
-      const pageWidth = 1440;
-      const scale = Math.min(window.innerWidth / pageWidth, 1);
+  if (window.innerWidth < 768) {
+    scale *= 2.0;
+  }
 
-      page.style.transform = `scale(${scale})`;
-      page.style.transformOrigin = 'top left';
+  page.style.transform = `scale(${scale})`;
+  page.style.transformOrigin = 'top center';
 
-      wrapper.style.height = (page.offsetHeight * scale) + 'px';
-    }
-    window.addEventListener('load', scaleToFit);
-    window.addEventListener('resize', scaleToFit);
+  wrapper.style.height = 'auto';
+  document.body.style.overflowX = 'hidden';
+}
+window.addEventListener('load', scaleToFit);
+window.addEventListener('resize', scaleToFit);
+
   </script>
 </head>
 <body>
