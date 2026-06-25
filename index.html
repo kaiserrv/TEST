@@ -38,21 +38,19 @@
 function scaleToFit() {
   const page = document.querySelector('.export-page');
   const wrapper = document.getElementById('page-wrapper');
+
   if (!page || !wrapper) return;
 
   const pageWidth = 1440;
-  let scale = Math.min(window.innerWidth / pageWidth, 1);
-
-  if (window.innerWidth < 768) {
-    scale *= 2.0;
-  }
+  const scale = Math.min(window.innerWidth / pageWidth, 1);
 
   page.style.transform = `scale(${scale})`;
-  page.style.transformOrigin = 'top center';
+  page.style.transformOrigin = 'top left';
 
-  wrapper.style.height = 'auto';
-  document.body.style.overflowX = 'hidden';
+  wrapper.style.height =
+    page.getBoundingClientRect().height + 'px';
 }
+    
 window.addEventListener('load', scaleToFit);
 window.addEventListener('resize', scaleToFit);
 
