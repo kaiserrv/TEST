@@ -14,43 +14,37 @@
       background: #ffffff;
       font-family: Arial, sans-serif;
     }
-    .export-page {
-      position: relative;
-      width: 1440px;
-      min-width: 1440px;
-      min-height: 1600px;
-      margin: 0 auto;
-      background: #ffffff;
-      overflow: hidden;
-      transform-origin: top center;
-    }
-    #page-wrapper {
-      width: 100%;
-      overflow-x: hidden;
-    }
+  .export-page {
+    position: relative;
+    width: 1440px;
+    min-height: 1600px;
+    margin: 0 auto;
+    background: #fff;
+    transform-origin: top left;
+  }
+  
+  #page-wrapper {
+    width: 100%;
+    overflow: hidden;
+  }
   </style>
   <script>
-    function scaleToFit() {
-      var page = document.querySelector('.export-page');
-      var wrapper = document.getElementById('page-wrapper');
-      if (!page || !wrapper) return;
-      var pageWidth = 1440;
-      var screenWidth = window.innerWidth;
-      if (screenWidth < pageWidth) {
-        var scale = screenWidth / pageWidth;
-        page.style.transform = 'scale(' + scale + ')';
-        page.style.marginTop = '0';
-        page.style.marginBottom = '0';
-        // Adjust wrapper height so page doesn't overlap content below
-        var pageHeight = page.getBoundingClientRect().height / scale;
-        wrapper.style.height = (pageHeight * scale) + 'px';
-      } else {
-        page.style.transform = 'none';
-        wrapper.style.height = 'auto';
-      }
-    }
-    window.addEventListener('load', scaleToFit);
-    window.addEventListener('resize', scaleToFit);
+  function scaleToFit() {
+    const page = document.querySelector('.export-page');
+    const wrapper = document.getElementById('page-wrapper');
+    
+    if (!page || !wrapper) return;
+
+    const designWidth = 1440;
+    const viewportWidth = window.innerWidth;
+
+    const scale = Math.min(viewportWidth / designWidth, 1);
+
+    page.style.transform = `scale(${scale})`;
+
+    wrapper.style.height =
+    page.offsetHeight * scale + 'px';
+}
   </script>
 </head>
 <body>
